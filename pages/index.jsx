@@ -32,7 +32,7 @@ export default function IndexPage() {
 						<Input
 							required
 							onChange={(event) => {
-								useRef.current = event.target.value;
+								inputCity.current = event.target.value;
 							}}
 							placeholder='Enter your city'
 							className=' w-[450px]'
