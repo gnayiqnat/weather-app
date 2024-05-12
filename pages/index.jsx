@@ -16,7 +16,7 @@ export default function IndexPage() {
 
 	function fetchCity() {
 		fetch(
-			`https://api.openweathermap.org/data/2.5/weather?q={${inputCity.current}}&appid={${apiKey}}`
+			`https://api.openweathermap.org/data/2.5/weather?q=${inputCity.current}&appid=${apiKey}`
 		).then((r) => {
 			console.log(r);
 		});
