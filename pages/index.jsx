@@ -6,20 +6,45 @@ import { siteConfig } from '@/config/site';
 import { title, subtitle } from '@/components/primitives';
 import { GithubIcon } from '@/components/icons';
 import DefaultLayout from '@/layouts/default';
-import { Button, Input } from '@nextui-org/react';
-import { useRef } from 'react';
+import { Button, Input, Spinner } from '@nextui-org/react';
+import { useEffect, useRef, useState } from 'react';
+import { permanentRedirect } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 export default function IndexPage() {
 	const inputCity = useRef('');
-
 	const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
 
-	function fetchCity() {
-		fetch(
-			`https://api.openweathermap.org/data/2.5/weather?q=${inputCity.current}&appid=${apiKey}`
-		).then((r) => {
-			console.log(r);
-		});
+	const [isLoading, setIsLoading] = useState(false);
+
+	const [data, setData] = useState();
+
+	const router = useRouter();
+
+	async function fetchCity() {
+		setIsLoading(true);
+
+		const response = await fetch(
+			`https://api.openweathermap.org/data/2.5/weather?q=${inputCity.current}&appid=${apiKey}&limit=1&units=metric`
+		);
+
+		const JSONdata = await response.json();
+
+		setData(JSONdata);
+
+		console.log(JSONdata);
+
+		setTimeout(() => {
+			setIsLoading(false);
+
+			if (JSONdata.cod == 200) {
+				router.push('/results');
+			} else if (JSONdata.cod == 404) {
+				console.log('City not found!');
+			}
+		}, 500);
+
+		
 	}
 
 	return (
@@ -28,41 +53,32 @@ export default function IndexPage() {
 				<div className='inline-block max-w-lg text-center justify-center'>
 					<h1 className={title()}>Weather&nbsp;</h1>
 					<h1 className={title({ color: 'blue' })}>Forecast&nbsp;</h1>
-					<div className='flex flex-column items-center justify-center gap-3 mt-10'>
+					<div className='w-[500px] flex flex-column  items-center justify-center gap-3 mt-10'>
 						<Input
 							required
-							onChange={(event) => {
-								inputCity.current = event.target.value;
+							onKeyDown={(e) => {
+								e.key === 'Enter' && fetchCity();
+							}}
+							onChange={(e) => {
+								inputCity.current = e.target.value;
 							}}
 							placeholder='Enter your city'
-							className=' w-[450px]'
+							className=''
 							size='lg'
 						></Input>
 						<Button
-						color='primary'
-						variant='shadow'
-							className='w-[100px] opacity-85'
+							color='primary'
+							variant='shadow'
+							className=' opacity-85'
 							size='lg'
 							onClick={() => {
 								fetchCity();
 							}}
 						>
-							Search
+							{isLoading ? <Spinner color='white' size='sm' /> : 'Search'}
 						</Button>
 					</div>
 				</div>
-
-				{/* <div className='flex gap-3'>
-					<Link
-						isExternal
-						className={buttonStyles({ variant: 'shadow', radius: 'full' })}
-						href={siteConfig.links.github}
-					>
-						<GithubIcon size={20} />
-						GitHub
-					</Link>
-				</div>
-				 */}
 			</section>
 		</DefaultLayout>
 	);

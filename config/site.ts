@@ -8,9 +8,12 @@ export const siteConfig = {
 			label: 'Home',
 			href: '/',
 		},
+		{
+			label: 'Results',
+			href: '/results',
+		},
 	],
 	links: {
 		github: 'https://github.com/gnayiqnat/weather-app',
-		
 	},
 };
