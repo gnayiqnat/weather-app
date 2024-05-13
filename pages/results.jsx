@@ -1,6 +1,7 @@
 import { title } from '@/components/primitives';
 import DefaultLayout from '@/layouts/default';
 import { Button, Card, CardBody } from '@nextui-org/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { IoArrowBackOutline } from 'react-icons/io5';
@@ -19,22 +20,29 @@ export default function ResultPage() {
 
 	return (
 		<>
-			<DefaultLayout>
-				<Button
-					className=' absolute -mt-12 font-semibold'
-					variant='light'
-					startContent={<IoArrowBackOutline />}
-					onClick={() => {
-						router.back();
-					}}
+			<AnimatePresence>
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ type: 'linear', duration: 0.5 }}
 				>
-					Back
-				</Button>
-				<section className='prose flex flex-col justify-center items-center'>
-					<h2 className={title()}>{Math.round(temp)} °C</h2>
-					
-				</section>
-			</DefaultLayout>
+					<DefaultLayout>
+						<Button
+							className=' absolute -mt-12 font-semibold'
+							variant='light'
+							startContent={<IoArrowBackOutline />}
+							onClick={() => {
+								router.back();
+							}}
+						>
+							Back
+						</Button>
+						<section className='prose flex flex-col justify-center items-center'>
+							<h2 className={title()}>{Math.round(temp)} °C</h2>
+						</section>
+					</DefaultLayout>
+				</motion.div>
+			</AnimatePresence>
 		</>
 	);
 }

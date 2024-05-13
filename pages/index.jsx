@@ -10,6 +10,7 @@ import { Button, Input, Spinner } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { permanentRedirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function IndexPage() {
 	const inputCity = useRef('');
@@ -56,38 +57,46 @@ export default function IndexPage() {
 
 	return (
 		<DefaultLayout>
-			<section className='flex flex-col items-center justify-center gap-4 py-8 md:py-10'>
-				<div className='inline-block max-w-lg text-center justify-center'>
-					<h1 className={title()}>Weather&nbsp;</h1>
-					<h1 className={title({ color: 'blue' })}>Forecast&nbsp;</h1>
-					<div className='w-[500px] flex flex-column  items-center justify-center gap-3 mt-10'>
-						<Input
-							required
-							onKeyDown={(e) => {
-								e.key === 'Enter' && fetchCity();
-							}}
-							onChange={(e) => {
-								inputCity.current = e.target.value;
-							}}
-							placeholder='Enter your city'
-							className=''
-							size='lg'
-						></Input>
-						<Button
-							color='primary'
-							variant='shadow'
-							className=' opacity-85'
-							size='lg'
-							onClick={() => {
-								fetchCity();
-							}}
-						>
-							{isLoading ? <Spinner color='white' size='sm' /> : 'Search'}
-						</Button>
-					</div>
-					
-				</div>
-			</section>
+			<AnimatePresence>
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					exit={{ opacity: 0 }}
+					transition={{ type: 'linear', duration: 0.5 }}
+				>
+					<section className='flex flex-col items-center justify-center gap-4 py-8 md:py-10'>
+						<div className='inline-block max-w-lg text-center justify-center'>
+							<h1 className={title()}>Weather&nbsp;</h1>
+							<h1 className={title({ color: 'blue' })}>Forecast&nbsp;</h1>
+							<div className='w-[500px] flex flex-column  items-center justify-center gap-3 mt-10'>
+								<Input
+									required
+									onKeyDown={(e) => {
+										e.key === 'Enter' && fetchCity();
+									}}
+									onChange={(e) => {
+										inputCity.current = e.target.value;
+									}}
+									placeholder='Enter your city'
+									className=''
+									size='lg'
+								></Input>
+								<Button
+									color='primary'
+									variant='shadow'
+									className=' opacity-85'
+									size='lg'
+									onClick={() => {
+										fetchCity();
+									}}
+								>
+									{isLoading ? <Spinner color='white' size='sm' /> : 'Search'}
+								</Button>
+							</div>
+						</div>
+					</section>
+				</motion.div>
+			</AnimatePresence>
 		</DefaultLayout>
 	);
 }
