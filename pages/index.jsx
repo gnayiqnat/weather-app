@@ -9,15 +9,13 @@ import DefaultLayout from '@/layouts/default';
 import { Button, Input, Spinner } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { permanentRedirect } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function IndexPage() {
 	const inputCity = useRef('');
 	const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
 
 	const [isLoading, setIsLoading] = useState(false);
-
-	const [data, setData] = useState();
 
 	const router = useRouter();
 
@@ -29,22 +27,31 @@ export default function IndexPage() {
 		);
 
 		const JSONdata = await response.json();
+		if (JSONdata.cod == 200) {
+			console.log(JSONdata);
 
-		setData(JSONdata);
+			const location = JSONdata.name;
+			const temp = JSONdata.main.temp;
+			const feelsLike = JSONdata.main.feels_like;
+			const humidity = JSONdata.main.humidity;
 
-		console.log(JSONdata);
-
+			setTimeout(() => {
+				router.push({
+					pathname: '/results',
+					query: {
+						name: location,
+						temp: temp,
+						feelsLike: feelsLike,
+						humidity: humidity,
+					},
+				});
+			}, 500);
+		} else if (JSONdata.cod == 404) {
+			console.log('City not found!');
+		}
 		setTimeout(() => {
 			setIsLoading(false);
-
-			if (JSONdata.cod == 200) {
-				router.push('/results');
-			} else if (JSONdata.cod == 404) {
-				console.log('City not found!');
-			}
 		}, 500);
-
-		
 	}
 
 	return (
@@ -78,6 +85,7 @@ export default function IndexPage() {
 							{isLoading ? <Spinner color='white' size='sm' /> : 'Search'}
 						</Button>
 					</div>
+					
 				</div>
 			</section>
 		</DefaultLayout>
