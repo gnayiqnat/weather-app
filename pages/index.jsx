@@ -20,27 +20,31 @@ export default function IndexPage() {
 
 	const router = useRouter();
 
+	// NPM module for converting country code to full country name
+	var countries = require('i18n-iso-countries');
+	countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
+
 	async function fetchCity() {
 		setIsLoading(true);
-
 		const response = await fetch(
 			`https://api.openweathermap.org/data/2.5/weather?q=${inputCity.current}&appid=${apiKey}&limit=1&units=metric`
 		);
 
 		const JSONdata = await response.json();
 		if (JSONdata.cod == 200) {
-			console.log(JSONdata);
 
 			const location = JSONdata.name;
+			const country = countries.getName(JSONdata.sys.country, 'en');
 			const temp = JSONdata.main.temp;
 			const feelsLike = JSONdata.main.feels_like;
 			const humidity = JSONdata.main.humidity;
-
+			
 			setTimeout(() => {
 				router.push({
 					pathname: '/results',
 					query: {
 						name: location,
+						country: country,
 						temp: temp,
 						feelsLike: feelsLike,
 						humidity: humidity,

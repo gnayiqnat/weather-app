@@ -10,6 +10,7 @@ export default function ResultPage() {
 	const searchParams = useSearchParams();
 
 	const location = searchParams.get('name');
+	const country = searchParams.get('country');
 	const temp = searchParams.get('temp');
 	const feelsLike = searchParams.get('feelsLike');
 	const humidity = searchParams.get('humidity');
@@ -38,6 +39,9 @@ export default function ResultPage() {
 							Back
 						</Button>
 						<section className='prose flex flex-col justify-center items-center'>
+							<h6 className='mb-1 opacity-70'>
+								{location}, {country}
+							</h6>
 							<h2 className={title()}>{Math.round(temp)} °C</h2>
 						</section>
 					</DefaultLayout>
