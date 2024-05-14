@@ -11,12 +11,14 @@ import { useEffect, useRef, useState } from 'react';
 import { permanentRedirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import { enqueueSnackbar } from 'notistack';
 
 export default function IndexPage() {
 	const inputCity = useRef('');
 	const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
 
 	const [isLoading, setIsLoading] = useState(false);
+	const [errorNotFound, setErrorNotFound] = useState(false);
 
 	const router = useRouter();
 
@@ -32,13 +34,12 @@ export default function IndexPage() {
 
 		const JSONdata = await response.json();
 		if (JSONdata.cod == 200) {
-
 			const location = JSONdata.name;
 			const country = countries.getName(JSONdata.sys.country, 'en');
 			const temp = JSONdata.main.temp;
 			const feelsLike = JSONdata.main.feels_like;
 			const humidity = JSONdata.main.humidity;
-			
+
 			setTimeout(() => {
 				router.push({
 					pathname: '/results',
@@ -53,6 +54,7 @@ export default function IndexPage() {
 			}, 500);
 		} else if (JSONdata.cod == 404) {
 			console.log('City not found!');
+			enqueueSnackbar('City not found!', {preventDuplicate: true})
 		}
 		setTimeout(() => {
 			setIsLoading(false);
