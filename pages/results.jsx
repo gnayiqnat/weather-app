@@ -33,7 +33,7 @@ export default function ResultPage() {
 							variant='light'
 							startContent={<IoArrowBackOutline />}
 							onClick={() => {
-								router.back();
+								router.push('/');
 							}}
 						>
 							Back
