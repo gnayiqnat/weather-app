@@ -16,7 +16,7 @@
 		"autoprefixer": "10.4.19",
 		"clsx": "^2.0.0",
 		"eslint": "8.48.0",
-		"eslint-config-next": "14.2.1",
+		"eslint-config-next": "14.2.35",
 		"framer-motion": "^11.1.1",
 		"i18n-iso-countries": "^7.11.2",
 		"intl-messageformat": "^10.5.0",
